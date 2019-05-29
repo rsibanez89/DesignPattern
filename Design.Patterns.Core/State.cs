@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Design.Patters.Core
+namespace Design.Patterns.Core
 {
 	public abstract class State
 	{

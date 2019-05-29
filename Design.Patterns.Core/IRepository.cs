@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Design.Patters.Core
+namespace Design.Patterns.Core
 {
 	public interface IRepository<TState>
 		where TState : State
