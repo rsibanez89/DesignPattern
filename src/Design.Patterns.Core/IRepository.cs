@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Design.Patterns.Core
@@ -6,6 +7,13 @@ namespace Design.Patterns.Core
 	public interface IRepository<TState>
 		where TState : State
 	{
+		/// <summary>
+		/// Returns the list of Entities
+		/// </summary>
+		/// <param name="entityId"></param>
+		/// <returns></returns>
+		Task<IEnumerable<TState>> ListAsync();
+
 		/// <summary>
 		/// Returns the last state of the Entity or throw an exception if the Entity does not exist
 		/// </summary>
@@ -32,6 +40,6 @@ namespace Design.Patterns.Core
 		/// </summary>
 		/// <param name="state"></param>
 		/// <returns></returns>
-		Task SaveChangesAsync(TState state);
+		Task<TState> SaveChangesAsync(TState state);
 	}
 }
