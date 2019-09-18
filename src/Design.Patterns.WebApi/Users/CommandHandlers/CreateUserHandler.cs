@@ -11,11 +11,11 @@ namespace Design.Patterns.WebApi.Users
 		public async Task<UserState> HandleAsync(UserState state, CreateUser msg)
 		{
 			var now = DateTime.Now;
-			state.Id = msg.Id;
+			state.Id = 1;
 			state.CreatedOn = now;
-			state.CreatedBy = 0;
+			state.CreatedBy = 5;
 			state.LastModifiedOn = now;
-			state.CreatedBy = 0;
+			state.CreatedBy = 5;
 			state.Version = 1;
 			state.FirstName = msg.FirstName;
 			state.LastName = msg.LastName;

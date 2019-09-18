@@ -42,7 +42,7 @@ namespace Design.Patterns.WebApi.CommonHelpers
 				new
 				{
 					EntityID = entityId
-				});
+				}, commandType: CommandType.Text);
 		}
 
 		public Task<TState> CreateAsync(long entityId)
@@ -61,10 +61,7 @@ namespace Design.Patterns.WebApi.CommonHelpers
 			string columns = string.Join(", ", state.GetType().GetProperties().Select(x => x.Name));
 			string columnsAt = string.Join(", ", state.GetType().GetProperties().Select(x => $"@{x.Name}"));
 
-			string values = string.Join(", ", state.GetType().GetProperties().Select(x => x.GetValue(state)));
-
-			await DBConnection.ExecuteAsync($"INSERT INTO {TableName} ({columns}) VALUES ({columnsAt})",
-				state);
+			await DBConnection.ExecuteAsync($"INSERT INTO {TableName} ({columns}) VALUES ({columnsAt})", state);
 
 			return state;
 		}
