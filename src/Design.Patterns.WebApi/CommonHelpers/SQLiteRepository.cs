@@ -18,6 +18,7 @@ namespace Design.Patterns.WebApi.CommonHelpers
 	{
 		public IDbConnection DBConnection { get; private set; }
 		public string TableName { get; private set; }
+		public IEnumerable<string> TableColumns { get; private set; }
 
 		public SQLiteRepository(IDbConnection connection)
 		{
@@ -28,42 +29,82 @@ namespace Design.Patterns.WebApi.CommonHelpers
 			{
 				TableName = name[0..^5];
 			}
+
+			TableColumns = typeof(TState).GetProperties().Select(x => x.Name);
 		}
 
 		public Task<IEnumerable<TState>> ListAsync()
 		{
-			return DBConnection.QueryAsync<TState>($"SELECT * FROM {TableName}");
+			return DBConnection.QueryAsync<TState>($"SELECT * FROM {TableName} WHERE DeletedOn IS NULL");
 		}
 
 		public Task<TState> GetAsync(long entityId)
 		{
 			return DBConnection.QuerySingleAsync<TState>(
-				$"SELECT * FROM {TableName} WHERE ID = @EntityID",
+				$"SELECT * FROM {TableName} WHERE ID = @EntityID AND DeletedOn IS NULL",
 				new
 				{
 					EntityID = entityId
 				}, commandType: CommandType.Text);
 		}
 
-		public Task<TState> CreateAsync(long entityId)
+		public async Task<TState> CreateAsync(TState state)
 		{
-			
-			return null;
-		}
+			var now = DateTime.Now;
+			state.CreatedOn = now;
+			state.CreatedBy = -1; // Need a way to get the userId that is doing this request
+			state.LastModifiedOn = now;
+			state.LastModifiedBy = -1; // Need a way to get the userId that is doing this request
+			state.Version = 1;
 
-		public Task<TState> GetOrCreateAsync(long entityId)
-		{
-			throw new NotImplementedException();
-		}
+			// Id value will be generated in Database
+			var columsWithoutId = TableColumns.Where(name => name != "Id");
 
-		public async Task<TState> SaveChangesAsync(TState state)
-		{
-			string columns = string.Join(", ", state.GetType().GetProperties().Select(x => x.Name));
-			string columnsAt = string.Join(", ", state.GetType().GetProperties().Select(x => $"@{x.Name}"));
+			string columns = string.Join(", ", columsWithoutId);
+			string columnsAt = string.Join(", ", columsWithoutId.Select(x => $"@{x}"));
 
-			await DBConnection.ExecuteAsync($"INSERT INTO {TableName} ({columns}) VALUES ({columnsAt})", state);
+			state.Id = await DBConnection.ExecuteAsync(
+				@$"INSERT INTO {TableName} ({columns}) VALUES ({columnsAt});
+				SELECT last_insert_rowid()", state);
 
 			return state;
+		}
+
+		public async Task<TState> UpdateAsync(TState state)
+		{
+			var now = DateTime.Now;
+			return await UpdateOnDateAsync(state, now);
+		}
+
+
+		public async Task<TState> DeleteAsync(TState state)
+		{
+			var now = DateTime.Now;
+			state.DeletedOn = now;
+			state.DeletedBy = -1; // Need a way to get the userId that is doing this request
+			return await UpdateOnDateAsync(state, now);
+
+		}
+
+		private async Task<TState> UpdateOnDateAsync(TState state, DateTime time)
+		{
+			state.LastModifiedOn = time;
+			state.LastModifiedBy = -1; // Need a way to get the userId that is doing this request
+			state.Version++;
+
+			string updates = string.Join(", ", TableColumns.Select(x => $"{x} = @{x}"));
+
+			var changes = await DBConnection.ExecuteAsync(
+				@$"UPDATE {TableName} SET {updates} WHERE ID = @Id AND Version = {state.Version - 1};
+				SELECT changes()", state);
+
+			if (changes > 0)
+			{
+				return state;
+			}
+
+			throw new ApplicationException($"You are trying to update an old version of the entity {TableName}. Refresh the page and try again.");
+
 		}
 	}
 }

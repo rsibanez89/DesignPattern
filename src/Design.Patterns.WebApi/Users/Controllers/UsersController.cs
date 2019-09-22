@@ -22,35 +22,46 @@ namespace Design.Patterns.WebApi.Users
 
 		// GET api/users
 		[HttpGet]
-		public async Task<IEnumerable<UserState>> GetAsync()
+		public async Task<IEnumerable<UserView>> GetAsync()
 		{
-			return await userQueryHandlers.HandleAsync(null, new GetUsers());
+			return (await userQueryHandlers.HandleAsync(new GetUsers()))
+				.Select(userState => userState.ToUserView());
 		}
 
-		// GET api/values/5
+		// GET api/users/5
 		[HttpGet("{id}")]
-		public ActionResult<string> Get(int id)
+		public async Task<UserView> Get(int id)
 		{
-			return "value";
+			return (await userQueryHandlers.HandleAsync(new GetUser { Id = id }))
+				.ToUserView();
 		}
 
 		// POST api/users
 		[HttpPost]
 		public async Task Post([FromBody] CreateUser createUser)
 		{
-			await userCommandHandlers.HandleAsync(new UserState(), createUser);
+			await userCommandHandlers.HandleAsync(createUser);
 		}
 
-		// PUT api/values/5
+		// PUT api/users/5
 		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
+		public async Task Put(int id, [FromBody] UpdateUserDetails updateUserDetails)
 		{
+			await userCommandHandlers.HandleAsync(updateUserDetails);
 		}
 
-		// DELETE api/values/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
+		// PUT api/users/5
+		[HttpPut("{id}/updatepassword")]
+		public async Task Put(int id, [FromBody] UpdateUserPassword updateUserPassword)
 		{
+			await userCommandHandlers.HandleAsync(updateUserPassword);
+		}
+
+		// DELETE api/users/5
+		[HttpDelete("{id}")]
+		public async Task Delete(long id)
+		{
+			await userCommandHandlers.HandleAsync(new DeleteUser { Id = id });
 		}
 	}
 }

@@ -22,24 +22,24 @@ namespace Design.Patterns.Core
 		Task<TState> GetAsync(long entityId);
 
 		/// <summary>
-		/// Creates a new instance of the Entity
+		/// Creates a new instance of the Entity in the database
 		/// </summary>
 		/// <param name="entityId"></param>
 		/// <returns></returns>
-		Task<TState> CreateAsync(long entityId);
+		Task<TState> CreateAsync(TState entityId);
 
 		/// <summary>
-		/// Returns the last state of the Entity or Creates a new instance if the Entity does not exist
-		/// </summary>
-		/// <param name="entityId"></param>
-		/// <returns></returns>
-		Task<TState> GetOrCreateAsync(long entityId);
-
-		/// <summary>
-		/// Saves the Entity into the database
+		/// Updates the Entity in the database
 		/// </summary>
 		/// <param name="state"></param>
 		/// <returns></returns>
-		Task<TState> SaveChangesAsync(TState state);
+		Task<TState> UpdateAsync(TState state);
+
+		/// <summary>
+		/// Deletes the Entity in the database
+		/// </summary>
+		/// <param name="state"></param>
+		/// <returns></returns>
+		Task<TState> DeleteAsync(TState state);
 	}
 }

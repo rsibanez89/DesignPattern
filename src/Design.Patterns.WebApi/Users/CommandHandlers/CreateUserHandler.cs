@@ -1,27 +1,23 @@
-﻿using Design.Patterns.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserCommandHandlers
 	{
-		public async Task<UserState> HandleAsync(UserState state, CreateUser msg)
+		public async Task<UserState> HandleAsync(CreateUser msg, CancellationToken? cancellationToken)
 		{
-			var now = DateTime.Now;
-			state.Id = 1;
-			state.CreatedOn = now;
-			state.CreatedBy = 5;
-			state.LastModifiedOn = now;
-			state.CreatedBy = 5;
-			state.Version = 1;
-			state.FirstName = msg.FirstName;
-			state.LastName = msg.LastName;
-			state.Email = msg.Email;
+			var encryptedPassword = passwordService.EncryptPassword(msg.Password);
+			var state = new UserState
+			{
+				FirstName = msg.FirstName,
+				LastName = msg.LastName,
+				Email = msg.Email,
+				Password = encryptedPassword.Password,
+				Salt = encryptedPassword.Salt
+			};
 
-			return await repository.SaveChangesAsync(state);
+			return await repository.CreateAsync(state);
 		}
 	}
 }

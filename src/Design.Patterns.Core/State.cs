@@ -5,7 +5,7 @@ namespace Design.Patterns.Core
 	public abstract class State
 	{
 		public long Id { get; set; }
-		
+
 		public int Version { get; set; }
 
 		public long LastModifiedBy { get; set; }

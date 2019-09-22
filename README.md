@@ -7,7 +7,7 @@ This project is using SQLite and liquibase.
 Install liquibase-3.5.5 and add it to the Path environment variable. [LINK](https://download.liquibase.org/download-community/)
 Then Run:
 ```
-> cd Design.Patterns.WebApi/sqlite-database/
+> cd src/Design.Patterns.WebApi/sqlite-database/
 > liquibase update
 ```
 

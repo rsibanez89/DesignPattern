@@ -5,12 +5,9 @@ using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
-	public class GetUser
+	public class EncryptedPassword
 	{
-		public long Id { get; set; }
-	}
-
-	public class GetUsers
-	{
+		public byte[] Password { get; set; }
+		public byte[] Salt { get; set; }
 	}
 }
