@@ -13,4 +13,10 @@ namespace Design.Patterns.WebApi.Users
 	public class GetUsers
 	{
 	}
+
+	public class AuthenticateUser
+	{
+		public string Email { get; set; }
+		public string Password { get; set; }
+	}
 }

@@ -1,12 +1,8 @@
 ﻿using Design.Patterns.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
@@ -25,7 +21,7 @@ namespace Design.Patterns.WebApi.Users
 			// Add Repositories
 			services
 				.AddTransient<IDbConnection>(_ => new SQLiteConnection(config.GetConnectionString("DesignPatternsDatabase")))
-				.AddTransient<IRepository<UserState>, UserRepository>();
+				.AddTransient<IUserRepository, UserRepository>();
 
 			// Add Services
 			services.AddTransient<IPasswordService, PasswordService>();

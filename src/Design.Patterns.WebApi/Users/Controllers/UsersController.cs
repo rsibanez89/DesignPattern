@@ -28,6 +28,14 @@ namespace Design.Patterns.WebApi.Users
 				.Select(userState => userState.ToUserView());
 		}
 
+		// POST api/users/authenticate
+		[HttpPost("authenticate")]
+		public async Task<UserView> AuthenticateAsync([FromBody] AuthenticateUser authenticateUser)
+		{
+			return (await userQueryHandlers.HandleAsync(authenticateUser))
+				.ToUserView();
+		}
+
 		// GET api/users/5
 		[HttpGet("{id}")]
 		public async Task<UserView> Get(int id)

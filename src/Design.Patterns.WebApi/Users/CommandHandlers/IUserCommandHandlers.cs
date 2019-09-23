@@ -11,10 +11,10 @@ namespace Design.Patterns.WebApi.Users
 
 	public partial class UserCommandHandlers : IUserCommandHandlers
 	{
-		private readonly IRepository<UserState> repository;
+		private readonly IUserRepository repository;
 		private readonly IPasswordService passwordService;
 
-		public UserCommandHandlers(IRepository<UserState> repository, IPasswordService passwordService)
+		public UserCommandHandlers(IUserRepository repository, IPasswordService passwordService)
 		{
 			this.repository = repository;
 			this.passwordService = passwordService;
