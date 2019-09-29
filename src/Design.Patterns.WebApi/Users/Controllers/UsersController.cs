@@ -1,4 +1,5 @@
 ﻿using Design.Patterns.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Design.Patterns.WebApi.Users
 
 		// GET api/users
 		[HttpGet]
+		[Authorize]
 		public async Task<IEnumerable<UserView>> GetAsync()
 		{
 			return (await userQueryHandlers.HandleAsync(new GetUsers()))
@@ -32,8 +34,10 @@ namespace Design.Patterns.WebApi.Users
 		[HttpPost("authenticate")]
 		public async Task<UserView> AuthenticateAsync([FromBody] AuthenticateUser authenticateUser)
 		{
-			return (await userQueryHandlers.HandleAsync(authenticateUser))
-				.ToUserView();
+			var (userState, token) = await userQueryHandlers.HandleAsync(authenticateUser);
+
+			return userState
+				.ToUserView(token);
 		}
 
 		// GET api/users/5

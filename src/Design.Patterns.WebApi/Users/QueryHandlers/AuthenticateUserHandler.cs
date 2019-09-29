@@ -6,7 +6,7 @@ namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserQueryHandlers
 	{
-		public async Task<UserState> HandleAsync(AuthenticateUser msg, CancellationToken? cancellationToken)
+		public async Task<Tuple<UserState, string>> HandleAsync(AuthenticateUser msg, CancellationToken? cancellationToken)
 		{
 			var state = await repository.GetUserByEmail(msg.Email);
 			if (state == null)
@@ -26,8 +26,7 @@ namespace Design.Patterns.WebApi.Users
 			}
 
 			// Create authorization token
-
-			return state;
+			return new Tuple<UserState, string>(state, jwtBearerService.GetToken(state.Id.ToString(), state.FirstName));
 		}
 	}
 }

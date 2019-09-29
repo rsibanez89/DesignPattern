@@ -9,6 +9,9 @@ namespace Design.Patterns.WebApi.Users
 	public class UserModuleOptions
 	{
 		public string PasswordPepper { get; set; }
+		public string JwtIssuerSigningKey { get; set; }
+		public string JwtIssuer { get; set; }
+		public string JwtAudience { get; set; }
 	}
 
 	public static class UsersModule
@@ -24,7 +27,9 @@ namespace Design.Patterns.WebApi.Users
 				.AddTransient<IUserRepository, UserRepository>();
 
 			// Add Services
-			services.AddTransient<IPasswordService, PasswordService>();
+			services
+				.AddTransient<IPasswordService, PasswordService>()
+				.AddTransient<IJwtBearerService, JwtBearerService>();
 
 			// Add Handlers
 			return services

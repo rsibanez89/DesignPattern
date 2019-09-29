@@ -1,9 +1,11 @@
 using Design.Patterns.WebApi.CommonHelpers;
+using Design.Patterns.WebApi.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Owin.Security.OAuth;
 
 namespace Design.Patterns.WebApi
 {
@@ -22,7 +24,7 @@ namespace Design.Patterns.WebApi
 			services.AddControllers()
 				.AddNewtonsoftJson();
 
-			services.ConfigureDesignPattersProject(Configuration);
+			services.ConfigureDesignPattersDependencyInjection(Configuration);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +41,13 @@ namespace Design.Patterns.WebApi
 			}
 
 			app.UseMiddleware<GlobalExceptionMiddleware>();
+
+			//app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
+			//{
+			//	AllowInsecureHttp = true,//should be disabled in production
+			//	Provider = new AuthorizationServerProvider(),
+			//	TokenEndpointPath = new PathString("/token")
+			//});
 
 			app.UseHttpsRedirection();
 
