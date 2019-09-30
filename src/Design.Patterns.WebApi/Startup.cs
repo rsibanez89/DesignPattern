@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
 
 namespace Design.Patterns.WebApi
 {
@@ -22,7 +22,7 @@ namespace Design.Patterns.WebApi
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers()
-				.AddNewtonsoftJson();
+				.AddNewtonsoftJson(options => options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 
 			services.ConfigureDesignPattersDependencyInjection(Configuration);
 		}
@@ -41,13 +41,6 @@ namespace Design.Patterns.WebApi
 			}
 
 			app.UseMiddleware<GlobalExceptionMiddleware>();
-
-			//app.UseOAuthAuthorizationServer(new OAuthAuthorizationServerOptions
-			//{
-			//	AllowInsecureHttp = true,//should be disabled in production
-			//	Provider = new AuthorizationServerProvider(),
-			//	TokenEndpointPath = new PathString("/token")
-			//});
 
 			app.UseHttpsRedirection();
 

@@ -19,12 +19,16 @@ namespace Design.Patterns.WebApi.Users
 	{
 		private readonly SigningCredentials SigningCredentials;
 		private readonly JwtSecurityTokenHandler TokenHandler;
+		private readonly string Audience;
+		private readonly string Issuer;
 
 		public JwtBearerService(IOptions<UserModuleOptions> options)
 		{
 			var key = Encoding.UTF8.GetBytes(options.Value.JwtIssuerSigningKey);
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
 			TokenHandler = new JwtSecurityTokenHandler();
+			Audience = options.Value.JwtAudience;
+			Issuer = options.Value.JwtIssuer;
 		}
 
 		public string GetToken(string id, string userName)
@@ -33,11 +37,12 @@ namespace Design.Patterns.WebApi.Users
 			{
 				Subject = new ClaimsIdentity(new Claim[]
 				{
-					new Claim(ClaimTypes.NameIdentifier, id),
-					new Claim(ClaimTypes.Name, userName)
+					new Claim(ClaimTypes.NameIdentifier, id)
 				}),
 				Expires = DateTime.UtcNow.AddDays(7),
-				SigningCredentials = SigningCredentials
+				SigningCredentials = SigningCredentials,
+				Audience = Audience,
+				Issuer = Issuer
 			};
 			var token = TokenHandler.CreateToken(tokenDescriptor);
 			return TokenHandler.WriteToken(token);
