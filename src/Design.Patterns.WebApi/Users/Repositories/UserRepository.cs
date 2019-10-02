@@ -25,7 +25,7 @@ namespace Design.Patterns.WebApi.Users
 
 		public Task<UserState> GetUserByEmail(string email)
 		{
-			return DBConnection.QuerySingleOrDefaultAsync<UserState>($"SELECT * FROM {TableName} WHERE Email = @Email", new { Email = email });
+			return DBConnection.QuerySingleOrDefaultAsync<UserState>($"SELECT * FROM {TableName} WHERE Email = @Email AND DeletedOn IS NULL", new { Email = email });
 		}
 	}
 }

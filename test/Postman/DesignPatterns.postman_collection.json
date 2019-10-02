@@ -9,191 +9,34 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "Get Users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:44307/api/users",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "44307",
-							"path": [
-								"api",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create User",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"firstName\": \"Rodrigo\",\n\t\"lastName\": \"Ibanez\",\n\t\"email\": \"rsibanez89@gmail.com\",\n\t\"password\": \"12345678\"\n}"
-						},
-						"url": {
-							"raw": "https://localhost:44307/api/users",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "44307",
-							"path": [
-								"api",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get User",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://localhost:44307/api/users/1",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "44307",
-							"path": [
-								"api",
-								"users",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete User",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"id\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://localhost:44307/api/users/1",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "44307",
-							"path": [
-								"api",
-								"users",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update User",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"id\": 1,\n\t\"version\": 3\n\t\"firstName\": \"Rodrigo2\",\n\t\"lastName\": \"Ibanez2\",\n\t\"email\": \"rsibanez892@gmail.com\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://localhost:44307/api/users/1",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "44307",
-							"path": [
-								"api",
-								"users",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update User Password",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"id\": 3,\n\t\"version\": 1,\n\t\"newPassword\": \"aaaaaa\",\n\t\"oldPassword\": \"12345678\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://localhost:44307/api/users/1/updatepassword",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "44307",
-							"path": [
-								"api",
-								"users",
-								"1",
-								"updatepassword"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Authenticate User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "24af1e1f-c5c0-413a-a04d-f93c9f39ed2c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json; ",
+									"});",
+									"",
+									"if (pm.response.code == 200){",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.test(\"Has proper JSON Web Token\", function () {",
+									"        pm.expect(jsonData.token).to.be.not.empty;",
+									"    });",
+									"    ",
+									"    pm.environment.set(\"design-patterns-jwt\", jsonData.token);",
+									"    pm.environment.set(\"design-patterns-user-id\", jsonData.id);",
+									"    pm.environment.set(\"design-patterns-user-version\", jsonData.version);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -219,6 +62,314 @@
 								"api",
 								"users",
 								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5e2d909c-f999-4414-99c9-0cbe633c0733",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{design-patterns-jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwibmJmIjoxNTY5ODQyODA4LCJleHAiOjE1NzA0NDc2MDgsImlhdCI6MTU2OTg0MjgwOCwiaXNzIjoicmliYW5lejg5IiwiYXVkIjoiaHR0cHM6Ly9yaWJhbmV6LmNvbS5hciJ9.lsju5Uq5RsKp-HejHqXvktLPIp3wUVTE5CUeE6kIfXI",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://localhost:44307/api/users",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\": \"Rod\",\n\t\"lastName\": \"Ibanez\",\n\t\"email\": \"rsibanez89@gmail.com\",\n\t\"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/users",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa9f9f11-e89f-4b31-9684-ebf6bb42013a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json; ",
+									"});",
+									"",
+									"if (pm.response.code == 200){",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.environment.set(\"design-patterns-user-id\", jsonData.id);",
+									"    pm.environment.set(\"design-patterns-user-version\", jsonData.version);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44307/api/users/{{design-patterns-user-id}}",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"users",
+								"{{design-patterns-user-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8eb15994-6fe8-45b3-a8d9-d95265516634",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json; ",
+									"});",
+									"",
+									"if (pm.response.code == 200){",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.environment.set(\"design-patterns-user-id\", jsonData.id);",
+									"    pm.environment.set(\"design-patterns-user-version\", jsonData.version);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": {{design-patterns-user-id}},\n\t\"version\": {{design-patterns-user-version}},\n\t\"firstName\": \"Rodrigo\",\n\t\"lastName\": \"Ibanez\",\n\t\"email\": \"rsibanez89@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/users/{{design-patterns-user-id}}",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"users",
+								"{{design-patterns-user-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bae0887-22a5-4e40-b467-45c400598bac",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json; ",
+									"});",
+									"",
+									"if (pm.response.code == 200){",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.environment.set(\"design-patterns-user-id\", jsonData.id);",
+									"    pm.environment.set(\"design-patterns-user-version\", jsonData.version);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": {{design-patterns-user-id}},\n\t\"version\": {{design-patterns-user-version}},\n\t\"newPassword\": \"aaaaaa\",\n\t\"oldPassword\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/users/{{design-patterns-user-id}}/updatepassword",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"users",
+								"{{design-patterns-user-id}}",
+								"updatepassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5da22804-bf70-4d91-ac6d-4027533c8e8a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json; ",
+									"});",
+									"",
+									"if (pm.response.code == 200){",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.environment.set(\"design-patterns-user-id\", jsonData.id);",
+									"    pm.environment.set(\"design-patterns-user-version\", jsonData.version);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": {{design-patterns-user-id}},\n\t\"version\": {{design-patterns-user-version}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44307/api/users/{{design-patterns-user-id}}",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44307",
+							"path": [
+								"api",
+								"users",
+								"{{design-patterns-user-id}}"
 							]
 						}
 					},

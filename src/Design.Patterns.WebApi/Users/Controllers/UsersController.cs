@@ -51,30 +51,34 @@ namespace Design.Patterns.WebApi.Users
 
 		// POST api/users
 		[HttpPost]
-		public async Task Post([FromBody] CreateUser createUser)
+		public async Task<UserView> Post([FromBody] CreateUser createUser)
 		{
-			await userCommandHandlers.HandleAsync(createUser);
+			return (await userCommandHandlers.HandleAsync(createUser))
+				.ToUserView();
 		}
 
 		// PUT api/users/5
 		[HttpPut("{id}")]
-		public async Task Put(int id, [FromBody] UpdateUserDetails updateUserDetails)
+		public async Task<UserView> Put(int id, [FromBody] UpdateUserDetails updateUserDetails)
 		{
-			await userCommandHandlers.HandleAsync(updateUserDetails);
+			return (await userCommandHandlers.HandleAsync(updateUserDetails))
+				.ToUserView();
 		}
 
 		// PUT api/users/5
 		[HttpPut("{id}/updatepassword")]
-		public async Task Put(int id, [FromBody] UpdateUserPassword updateUserPassword)
+		public async Task<UserView> Put(int id, [FromBody] UpdateUserPassword updateUserPassword)
 		{
-			await userCommandHandlers.HandleAsync(updateUserPassword);
+			return (await userCommandHandlers.HandleAsync(updateUserPassword))
+				.ToUserView();
 		}
 
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
-		public async Task Delete(long id)
+		public async Task<UserView> Delete(long id, [FromBody] DeleteUser deleteUser)
 		{
-			await userCommandHandlers.HandleAsync(new DeleteUser { Id = id });
+			return (await userCommandHandlers.HandleAsync(deleteUser))
+				.ToUserView();
 		}
 	}
 }
