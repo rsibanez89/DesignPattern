@@ -6,6 +6,7 @@ namespace Design.Patterns.WebApi.Users
 		: IHandlerAsync<UserState, CreateUser>,
 		IHandlerAsync<UserState, UpdateUserDetails>,
 		IHandlerAsync<UserState, UpdateUserPassword>,
+		IHandlerAsync<UserState, AddUserRole>,
 		IHandlerAsync<UserState, DeleteUser>
 	{ }
 

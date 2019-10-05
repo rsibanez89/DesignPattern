@@ -1,6 +1,7 @@
 ﻿using Design.Patterns.Core;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Design.Patterns.WebApi.Users
 {
@@ -12,5 +13,6 @@ namespace Design.Patterns.WebApi.Users
 		public byte[] Password { get; set; }
 		public byte[] Salt { get; set; }
 		public string LastChangedPasswordOn { get; set; }
+		public IEnumerable<UserRole> Roles { get; set; }
 	}
 }

@@ -65,7 +65,7 @@ namespace Design.Patterns.WebApi.Users
 				.ToUserView();
 		}
 
-		// PUT api/users/5
+		// PUT api/users/5/updatepassword
 		[HttpPut("{id}/updatepassword")]
 		public async Task<UserView> Put(int id, [FromBody] UpdateUserPassword updateUserPassword)
 		{
@@ -73,8 +73,17 @@ namespace Design.Patterns.WebApi.Users
 				.ToUserView();
 		}
 
+		// PUT api/users/5/addrole
+		[HttpPut("{id}/addrole")]
+		public async Task<UserView> Put(int id, [FromBody] AddUserRole addUserRole)
+		{
+			return (await userCommandHandlers.HandleAsync(addUserRole))
+				.ToUserView();
+		}
+
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
+		[Authorize(Roles = nameof(UserRole.Admin))]
 		public async Task<UserView> Delete(long id, [FromBody] DeleteUser deleteUser)
 		{
 			return (await userCommandHandlers.HandleAsync(deleteUser))

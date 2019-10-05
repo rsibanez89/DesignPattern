@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
@@ -14,7 +15,8 @@ namespace Design.Patterns.WebApi.Users
 				LastName = msg.LastName,
 				Email = msg.Email,
 				Password = encryptedPassword.Password,
-				Salt = encryptedPassword.Salt
+				Salt = encryptedPassword.Salt,
+				Roles = new List<UserRole>() { UserRole.RegisteredUser }
 			};
 
 			return await repository.CreateAsync(state);

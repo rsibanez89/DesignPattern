@@ -12,7 +12,7 @@ namespace Design.Patterns.WebApi.Users
 {
 	public interface IJwtBearerService
 	{
-		string GetToken(string id, string userName);
+		string GetToken(UserState user);
 	}
 
 	public class JwtBearerService : IJwtBearerService
@@ -31,14 +31,14 @@ namespace Design.Patterns.WebApi.Users
 			Issuer = options.Value.JwtIssuer;
 		}
 
-		public string GetToken(string id, string userName)
+		public string GetToken(UserState user)
 		{
+			var claims = user.Roles
+				.Select(role => new Claim(ClaimTypes.Role, role.ToString()))
+				.Append(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
-				Subject = new ClaimsIdentity(new Claim[]
-				{
-					new Claim(ClaimTypes.NameIdentifier, id)
-				}),
+				Subject = new ClaimsIdentity(claims),
 				Expires = DateTime.UtcNow.AddDays(7),
 				SigningCredentials = SigningCredentials,
 				Audience = Audience,

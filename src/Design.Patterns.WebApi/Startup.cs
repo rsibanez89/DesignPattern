@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Design.Patterns.WebApi
 {
@@ -22,7 +23,11 @@ namespace Design.Patterns.WebApi
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers()
-				.AddNewtonsoftJson(options => options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
+				.AddNewtonsoftJson(options =>
+				{
+					options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+					options.SerializerSettings.Converters.Add(new StringEnumConverter());
+				});
 
 			services.ConfigureDesignPattersDependencyInjection(Configuration);
 		}
@@ -42,10 +47,10 @@ namespace Design.Patterns.WebApi
 
 			app.UseMiddleware<GlobalExceptionMiddleware>();
 
+			app.UseRouting();
 			app.UseHttpsRedirection();
 
-			app.UseRouting();
-
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>

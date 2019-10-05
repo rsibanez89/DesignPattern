@@ -26,7 +26,7 @@ namespace Design.Patterns.WebApi.Users
 			}
 
 			// Create authorization token
-			return new Tuple<UserState, string>(state, jwtBearerService.GetToken(state.Id.ToString(), state.FirstName));
+			return new Tuple<UserState, string>(state, jwtBearerService.GetToken(state));
 		}
 	}
 }

@@ -1,7 +1,9 @@
-﻿using Design.Patterns.Core;
+﻿using Dapper;
+using Design.Patterns.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +37,9 @@ namespace Design.Patterns.WebApi.Users
 				.AddTransient<IDbConnection>(_ => new SQLiteConnection(config.GetConnectionString("DesignPatternsDatabase")))
 				.AddTransient<IUserRepository, UserRepository>();
 
+			// Add Dapper Mapper for UserRole
+			SqlMapper.AddTypeHandler(new UserRoleTypeHandler());
+
 			// Add Services
 			services
 				.AddTransient<IPasswordService, PasswordService>()
@@ -44,8 +49,6 @@ namespace Design.Patterns.WebApi.Users
 			services
 				.AddTransient<IUserCommandHandlers, UserCommandHandlers>()
 				.AddTransient<IUserQueryHandlers, UserQueryHandlers>();
-
-			Console.WriteLine(userModuleOptions.GetValue<string>("jwtIssuerSigningKey"));
 
 			//JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 			services.AddAuthentication(options =>
@@ -83,7 +86,10 @@ namespace Design.Patterns.WebApi.Users
 				options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
 					.RequireAuthenticatedUser()
 					.Build();
+
+				options.AddPolicy("IsAdmin", policy => policy.RequireAuthenticatedUser().RequireRole("Admin").Build());
 			});
+
 
 			return services;
 		}

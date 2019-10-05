@@ -13,7 +13,8 @@ CREATE TABLE [User]
   Email NVARCHAR (200) NOT NULL,
   Password VARBINARY (32) NULL,
   Salt VARBINARY (32) NULL,
-  LastChangedPasswordOn DATETIME NULL
+  LastChangedPasswordOn DATETIME NULL,
+  Roles VARCHAR (200) NOT NULL
 )
 GO
 

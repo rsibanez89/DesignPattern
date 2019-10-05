@@ -30,6 +30,13 @@ namespace Design.Patterns.WebApi.Users
 		public string NewPassword { get; set; }
 	}
 
+	public class AddUserRole
+	{
+		public long Id { get; set; }
+		public int Version { get; set; }
+		public UserRole Role { get; set; }
+	}
+
 	public class DeleteUser
 	{
 		public long Id { get; set; }
