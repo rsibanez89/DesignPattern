@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Design.Patterns.Core", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Design.Patterns.WebApi", "src\Design.Patterns.WebApi\Design.Patterns.WebApi.csproj", "{AFAC3B53-275C-453E-9FCC-F0BE56CA201F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Design.Patterns.WebApi.Tests", "test\Design.Patterns.WebApi.Tests\Design.Patterns.WebApi.Tests.csproj", "{6141DA3E-19E2-445E-B43D-E73554811F67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{AFAC3B53-275C-453E-9FCC-F0BE56CA201F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFAC3B53-275C-453E-9FCC-F0BE56CA201F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFAC3B53-275C-453E-9FCC-F0BE56CA201F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6141DA3E-19E2-445E-B43D-E73554811F67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6141DA3E-19E2-445E-B43D-E73554811F67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6141DA3E-19E2-445E-B43D-E73554811F67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6141DA3E-19E2-445E-B43D-E73554811F67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{89586942-BD56-4FA9-8CC0-51CCAC42201E} = {C80F99EB-DD95-4450-8D33-230E80ADDB7B}
 		{AFAC3B53-275C-453E-9FCC-F0BE56CA201F} = {C80F99EB-DD95-4450-8D33-230E80ADDB7B}
+		{6141DA3E-19E2-445E-B43D-E73554811F67} = {F0375276-D11A-48C6-A394-D4DF39E31E68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {84F15B24-2B2B-4CCE-88EB-3C03C1AAAB99}
