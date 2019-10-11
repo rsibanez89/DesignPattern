@@ -34,7 +34,7 @@ namespace Design.Patterns.WebApi.Tests.Users
 
 			repository
 				.GetAsync(Arg.Any<long>())
-				.Returns(new UserState
+				.Returns(new UserEntity
 				{
 					Email = "rsibanez89@gmai.com",
 					FirstName = "Rodrigo",
@@ -43,11 +43,11 @@ namespace Design.Patterns.WebApi.Tests.Users
 				});
 
 			repository
-				.UpdateAsync(Arg.Any<UserState>())
-				.Returns(param => Task.FromResult((UserState)param[0]));
+				.UpdateAsync(Arg.Any<UserEntity>())
+				.Returns(param => Task.FromResult((UserEntity)param[0]));
 
 			// When
-			var user = await userCommandHandlers.HandleAsync(updateUserPassword);
+			var user = await userCommandHandlers.HandleAsync(updateUserPassword, null);
 
 			// Then
 			user.Password.Should().BeEquivalentTo(encodedPassword);
@@ -72,7 +72,7 @@ namespace Design.Patterns.WebApi.Tests.Users
 
 			repository
 				.GetAsync(Arg.Any<long>())
-				.Returns(new UserState
+				.Returns(new UserEntity
 				{
 					Email = "rsibanez89@gmai.com",
 					FirstName = "Rodrigo",
@@ -82,7 +82,7 @@ namespace Design.Patterns.WebApi.Tests.Users
 
 			// When
 			// Then
-			Assert.ThrowsAsync<ApplicationException>(() => userCommandHandlers.HandleAsync(updateUserPassword))
+			Assert.ThrowsAsync<ApplicationException>(() => userCommandHandlers.HandleAsync(updateUserPassword, null))
 				.Message.Should().Be("Your old password doesn't match");
 		}
 	}

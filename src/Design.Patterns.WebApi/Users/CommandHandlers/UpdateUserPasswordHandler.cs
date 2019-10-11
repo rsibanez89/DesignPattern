@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Design.Patterns.Core;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserCommandHandlers
 	{
-		public async Task<UserState> HandleAsync(UpdateUserPassword msg, CancellationToken? cancellationToken)
+		public async Task<UserEntity> HandleAsync(UpdateUserPassword msg, MessageContext messageContext)
 		{
 			var state = await repository.GetAsync(msg.Id);
 			var encryptedPassword = new EncryptedPassword

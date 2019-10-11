@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Design.Patterns.Core;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserQueryHandlers
 	{
-		public async Task<Tuple<UserState, string>> HandleAsync(AuthenticateUser msg, CancellationToken? cancellationToken)
+		public async Task<Tuple<UserEntity, string>> HandleAsync(AuthenticateUser msg, MessageContext messageContext)
 		{
 			var state = await repository.GetUserByEmail(msg.Email);
 			if (state == null)
@@ -26,7 +27,7 @@ namespace Design.Patterns.WebApi.Users
 			}
 
 			// Create authorization token
-			return new Tuple<UserState, string>(state, jwtBearerService.GetToken(state));
+			return new Tuple<UserEntity, string>(state, jwtBearerService.GetToken(state));
 		}
 	}
 }

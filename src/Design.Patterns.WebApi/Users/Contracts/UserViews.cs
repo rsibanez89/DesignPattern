@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
-	public class UserView : State
+	public class UserView : Entity
 	{
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
@@ -18,7 +18,7 @@ namespace Design.Patterns.WebApi.Users
 
 	public static class UserStateToUserView
 	{
-		public static UserView ToUserView(this UserState userState, string token = null)
+		public static UserView ToUserView(this UserEntity userState, string token = null)
 		{
 			return new UserView
 			{

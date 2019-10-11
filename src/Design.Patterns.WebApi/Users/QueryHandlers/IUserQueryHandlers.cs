@@ -5,9 +5,9 @@ using System.Collections.Generic;
 namespace Design.Patterns.WebApi.Users
 {
 	public interface IUserQueryHandlers
-		: IHandlerAsync<UserState, GetUser>,
-		IHandlerAsync<IEnumerable<UserState>, GetUsers>,
-		IHandlerAsync<Tuple<UserState, string>, AuthenticateUser>
+		: IHandlerAsync<UserEntity, GetUser, MessageContext>,
+		IHandlerAsync<IEnumerable<UserEntity>, GetUsers, MessageContext>,
+		IHandlerAsync<Tuple<UserEntity, string>, AuthenticateUser, MessageContext>
 	{ }
 
 	public partial class UserQueryHandlers : IUserQueryHandlers

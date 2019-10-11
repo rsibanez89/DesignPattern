@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Design.Patterns.Core;
+using Design.Patterns.WebApi.CommonHelpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -90,6 +91,7 @@ namespace Design.Patterns.WebApi.Users
 				options.AddPolicy("IsAdmin", policy => policy.RequireAuthenticatedUser().RequireRole("Admin").Build());
 			});
 
+            services.AddMvc(options => options.ModelBinderProviders.Insert(0, new MessageContextModelBinderProvider()));
 
 			return services;
 		}

@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Design.Patterns.Core
 {
-	public interface IHandlerAsync<TState, TMessage>
+    public interface IHandlerAsync<TState, TMessage>
+    {
+        Task<TState> HandleAsync(TMessage message);
+    }
+
+    public interface IHandlerAsync<TState, TMessage, TMessageContext>
 	{
-		Task<TState> HandleAsync(TMessage msg, CancellationToken? cancellationToken = null);
+		Task<TState> HandleAsync(TMessage message, TMessageContext messageContext);
 	}
 }

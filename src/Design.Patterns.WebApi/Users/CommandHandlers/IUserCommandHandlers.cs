@@ -3,11 +3,11 @@
 namespace Design.Patterns.WebApi.Users
 {
 	public interface IUserCommandHandlers
-		: IHandlerAsync<UserState, CreateUser>,
-		IHandlerAsync<UserState, UpdateUserDetails>,
-		IHandlerAsync<UserState, UpdateUserPassword>,
-		IHandlerAsync<UserState, AddUserRole>,
-		IHandlerAsync<UserState, DeleteUser>
+		: IHandlerAsync<UserEntity, CreateUser, MessageContext>,
+		IHandlerAsync<UserEntity, UpdateUserDetails, MessageContext>,
+		IHandlerAsync<UserEntity, UpdateUserPassword, MessageContext>,
+		IHandlerAsync<UserEntity, AddUserRole, MessageContext>,
+		IHandlerAsync<UserEntity, DeleteUser, MessageContext>
 	{ }
 
 	public partial class UserCommandHandlers : IUserCommandHandlers

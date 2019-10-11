@@ -12,7 +12,7 @@ namespace Design.Patterns.WebApi.Users
 {
 	public interface IJwtBearerService
 	{
-		string GetToken(UserState user);
+		string GetToken(UserEntity user);
 	}
 
 	public class JwtBearerService : IJwtBearerService
@@ -31,7 +31,7 @@ namespace Design.Patterns.WebApi.Users
 			Issuer = options.Value.JwtIssuer;
 		}
 
-		public string GetToken(UserState user)
+		public string GetToken(UserEntity user)
 		{
 			var claims = user.Roles
 				.Select(role => new Claim(ClaimTypes.Role, role.ToString()))

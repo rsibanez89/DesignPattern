@@ -2,12 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using Design.Patterns.Core;
 
 namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserCommandHandlers
 	{
-		public async Task<UserState> HandleAsync(AddUserRole msg, CancellationToken? cancellationToken)
+		public async Task<UserEntity> HandleAsync(AddUserRole msg, MessageContext messageContext)
 		{
 			var state = await repository.GetAsync(msg.Id);
 			if(state.Roles.Contains(msg.Role))

@@ -12,9 +12,10 @@ namespace Design.Patterns.WebApi.CommonHelpers
 	/// <summary>
 	/// Implements the IRepository by using SQLite
 	/// </summary>
-	public class SQLiteRepository<TState>
-		: IRepository<TState>
-		where TState : State
+	public class SQLiteRepository<TEntity, TMessageContext>
+		: IRepository<TEntity, TMessageContext>
+		where TEntity : Entity
+		where TMessageContext : MessageContext
 	{
 		public IDbConnection DBConnection { get; private set; }
 		public string TableName { get; private set; }
@@ -24,23 +25,23 @@ namespace Design.Patterns.WebApi.CommonHelpers
 		{
 			DBConnection = connection;
 
-			var name = typeof(TState).Name;
-			if (name.EndsWith("State"))
+			var name = typeof(TEntity).Name;
+			if (name.EndsWith("Entity"))
 			{
-				TableName = name[0..^5];
+				TableName = name[0..^6];
 			}
 
-			TableColumns = typeof(TState).GetProperties().Select(x => x.Name);
+			TableColumns = typeof(TEntity).GetProperties().Select(x => x.Name);
 		}
 
-		public Task<IEnumerable<TState>> ListAsync()
+		public Task<IEnumerable<TEntity>> ListAsync(TMessageContext messageContext)
 		{
-			return DBConnection.QueryAsync<TState>($"SELECT * FROM {TableName} WHERE DeletedOn IS NULL");
+			return DBConnection.QueryAsync<TEntity>($"SELECT * FROM {TableName} WHERE DeletedOn IS NULL");
 		}
 
-		public Task<TState> GetAsync(long entityId)
+		public Task<TEntity> GetAsync(long entityId, TMessageContext messageContext)
 		{
-			return DBConnection.QuerySingleAsync<TState>(
+			return DBConnection.QuerySingleAsync<TEntity>(
 				$"SELECT * FROM {TableName} WHERE ID = @EntityID AND DeletedOn IS NULL",
 				new
 				{
@@ -48,7 +49,7 @@ namespace Design.Patterns.WebApi.CommonHelpers
 				}, commandType: CommandType.Text);
 		}
 
-		public async Task<TState> CreateAsync(TState state)
+		public async Task<TEntity> CreateAsync(TEntity state, TMessageContext messageContext)
 		{
 			var now = DateTime.Now;
 			state.CreatedOn = now;
@@ -70,37 +71,37 @@ namespace Design.Patterns.WebApi.CommonHelpers
 			return state;
 		}
 
-		public async Task<TState> UpdateAsync(TState state)
+		public async Task<TEntity> UpdateAsync(TEntity entity, TMessageContext messageContext)
 		{
 			var now = DateTime.Now;
-			return await UpdateOnDateAsync(state, now);
+			return await UpdateOnDateAsync(entity, now);
 		}
 
 
-		public async Task<TState> DeleteAsync(TState state)
+		public async Task<TEntity> DeleteAsync(TEntity entity, TMessageContext messageContext)
 		{
 			var now = DateTime.Now;
-			state.DeletedOn = now;
-			state.DeletedBy = -1; // Need a way to get the userId that is doing this request
-			return await UpdateOnDateAsync(state, now);
+			entity.DeletedOn = now;
+			entity.DeletedBy = -1; // Need a way to get the userId that is doing this request
+			return await UpdateOnDateAsync(entity, now);
 
 		}
 
-		private async Task<TState> UpdateOnDateAsync(TState state, DateTime time)
+		private async Task<TEntity> UpdateOnDateAsync(TEntity entity, DateTime time)
 		{
-			state.LastModifiedOn = time;
-			state.LastModifiedBy = -1; // Need a way to get the userId that is doing this request
-			state.Version++;
+			entity.LastModifiedOn = time;
+			entity.LastModifiedBy = -1; // Need a way to get the userId that is doing this request
+			entity.Version++;
 
 			string updates = string.Join(", ", TableColumns.Select(x => $"{x} = @{x}"));
 
 			var changes = await DBConnection.ExecuteAsync(
-				@$"UPDATE {TableName} SET {updates} WHERE ID = @Id AND Version = {state.Version - 1};
-				SELECT changes()", state);
+				@$"UPDATE {TableName} SET {updates} WHERE ID = @Id AND Version = {entity.Version - 1};
+				SELECT changes()", entity);
 
 			if (changes > 0)
 			{
-				return state;
+				return entity;
 			}
 
 			throw new ApplicationException($"You are trying to update an old version of the entity {TableName}. Refresh the page and try again.");

@@ -1,4 +1,5 @@
 ﻿using Design.Patterns.Core;
+using Design.Patterns.WebApi.CommonHelpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace Design.Patterns.WebApi.Users
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class UsersController : ControllerBase
 	{
 		private readonly IUserCommandHandlers userCommandHandlers;
@@ -24,18 +26,18 @@ namespace Design.Patterns.WebApi.Users
 
 		// GET api/users
 		[HttpGet]
-		[Authorize]
 		public async Task<IEnumerable<UserView>> GetAsync()
 		{
-			return (await userQueryHandlers.HandleAsync(new GetUsers()))
+			return (await userQueryHandlers.HandleAsync(new GetUsers(), null))
 				.Select(userState => userState.ToUserView());
 		}
 
 		// POST api/users/authenticate
 		[HttpPost("authenticate")]
+		[AllowAnonymous]
 		public async Task<UserView> AuthenticateAsync([FromBody] AuthenticateUser authenticateUser)
 		{
-			var (userState, token) = await userQueryHandlers.HandleAsync(authenticateUser);
+			var (userState, token) = await userQueryHandlers.HandleAsync(authenticateUser, null);
 
 			return userState
 				.ToUserView(token);
@@ -45,15 +47,16 @@ namespace Design.Patterns.WebApi.Users
 		[HttpGet("{id}")]
 		public async Task<UserView> Get(int id)
 		{
-			return (await userQueryHandlers.HandleAsync(new GetUser { Id = id }))
+			return (await userQueryHandlers.HandleAsync(new GetUser { Id = id }, null))
 				.ToUserView();
 		}
 
 		// POST api/users
 		[HttpPost]
+		[AllowAnonymous]
 		public async Task<UserView> Post([FromBody] CreateUser createUser)
 		{
-			return (await userCommandHandlers.HandleAsync(createUser))
+			return (await userCommandHandlers.HandleAsync(createUser, null))
 				.ToUserView();
 		}
 
@@ -61,7 +64,7 @@ namespace Design.Patterns.WebApi.Users
 		[HttpPut("{id}")]
 		public async Task<UserView> Put(int id, [FromBody] UpdateUserDetails updateUserDetails)
 		{
-			return (await userCommandHandlers.HandleAsync(updateUserDetails))
+			return (await userCommandHandlers.HandleAsync(updateUserDetails, null))
 				.ToUserView();
 		}
 
@@ -69,7 +72,7 @@ namespace Design.Patterns.WebApi.Users
 		[HttpPut("{id}/updatepassword")]
 		public async Task<UserView> Put(int id, [FromBody] UpdateUserPassword updateUserPassword)
 		{
-			return (await userCommandHandlers.HandleAsync(updateUserPassword))
+			return (await userCommandHandlers.HandleAsync(updateUserPassword, null))
 				.ToUserView();
 		}
 
@@ -77,16 +80,16 @@ namespace Design.Patterns.WebApi.Users
 		[HttpPut("{id}/addrole")]
 		public async Task<UserView> Put(int id, [FromBody] AddUserRole addUserRole)
 		{
-			return (await userCommandHandlers.HandleAsync(addUserRole))
+			return (await userCommandHandlers.HandleAsync(addUserRole, null))
 				.ToUserView();
 		}
 
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
 		[Authorize(Roles = nameof(UserRole.Admin))]
-		public async Task<UserView> Delete(long id, [FromBody] DeleteUser deleteUser)
+		public async Task<UserView> Delete(long id, [FromBody] DeleteUser deleteUser, [ModelBinder] MessageContext messageContext)
 		{
-			return (await userCommandHandlers.HandleAsync(deleteUser))
+			return (await userCommandHandlers.HandleAsync(deleteUser, messageContext))
 				.ToUserView();
 		}
 	}

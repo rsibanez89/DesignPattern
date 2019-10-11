@@ -22,7 +22,7 @@ namespace Design.Patterns.WebApi.Tests.Users
 
 			repository
 				.GetAsync(Arg.Any<long>())
-				.Returns(new UserState
+				.Returns(new UserEntity
 				{
 					Email = "rsibanez89@gmai.com",
 					FirstName = "Rodrigo",
@@ -31,11 +31,11 @@ namespace Design.Patterns.WebApi.Tests.Users
 				});
 
 			repository
-				.UpdateAsync(Arg.Any<UserState>())
-				.Returns(param => Task.FromResult((UserState)param[0]));
+				.UpdateAsync(Arg.Any<UserEntity>())
+				.Returns(param => Task.FromResult((UserEntity)param[0]));
 
 			// When
-			var user = await userCommandHandlers.HandleAsync(updateUserDetails);
+			var user = await userCommandHandlers.HandleAsync(updateUserDetails, null);
 
 			// Then
 			user.Email.Should().Be("new@email.com");

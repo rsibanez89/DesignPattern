@@ -10,22 +10,22 @@ using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
-	public interface IUserRepository : IRepository<UserState>
+	public interface IUserRepository : IRepository<UserEntity, MessageContext>
 	{
-		Task<UserState> GetUserByEmail(string email);
+		Task<UserEntity> GetUserByEmail(string email);
 	}
 
 	public class UserRepository
-		: SQLiteRepository<UserState>,
+		: SQLiteRepository<UserEntity, MessageContext>,
 		IUserRepository
 	{
 		public UserRepository(IDbConnection connection) : base(connection)
 		{
 		}
 
-		public Task<UserState> GetUserByEmail(string email)
+		public Task<UserEntity> GetUserByEmail(string email)
 		{
-			return DBConnection.QuerySingleOrDefaultAsync<UserState>($"SELECT * FROM {TableName} WHERE Email = @Email AND DeletedOn IS NULL", new { Email = email });
+			return DBConnection.QuerySingleOrDefaultAsync<UserEntity>($"SELECT * FROM {TableName} WHERE Email = @Email AND DeletedOn IS NULL", new { Email = email });
 		}
 	}
 }

@@ -1,11 +1,12 @@
-﻿using System.Threading;
+﻿using Design.Patterns.Core;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserQueryHandlers
 	{
-		public async Task<UserState> HandleAsync(GetUser msg, CancellationToken? cancellationToken)
+		public async Task<UserEntity> HandleAsync(GetUser msg, MessageContext messageContext)
 		{
 			return await repository.GetAsync(msg.Id);
 		}

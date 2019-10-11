@@ -18,7 +18,7 @@ namespace Design.Patterns.WebApi.Tests.Users
 
 			repository
 				.GetAsync(Arg.Any<long>())
-				.Returns(new UserState
+				.Returns(new UserEntity
 				{
 					Email = "rsibanez89@gmai.com",
 					FirstName = "Rodrigo",
@@ -27,15 +27,15 @@ namespace Design.Patterns.WebApi.Tests.Users
 				});
 
 			repository
-				.DeleteAsync(Arg.Any<UserState>())
-				.Returns(param => Task.FromResult((UserState)param[0]));
+				.DeleteAsync(Arg.Any<UserEntity>())
+				.Returns(param => Task.FromResult((UserEntity)param[0]));
 
 
 			// When
-			var user = await userCommandHandlers.HandleAsync(deleteUser);
+			var user = await userCommandHandlers.HandleAsync(deleteUser, null);
 
 			// Then
-			await repository.Received(1).DeleteAsync(Arg.Any<UserState>());
+			await repository.Received(1).DeleteAsync(Arg.Any<UserEntity>());
 		}
 	}
 }

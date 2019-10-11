@@ -1,11 +1,12 @@
-﻿using System.Threading;
+﻿using Design.Patterns.Core;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserCommandHandlers
 	{
-		public async Task<UserState> HandleAsync(UpdateUserDetails msg, CancellationToken? cancellationToken)
+		public async Task<UserEntity> HandleAsync(UpdateUserDetails msg, MessageContext messageContext)
 		{
 			var state = await repository.GetAsync(msg.Id);
 			state.FirstName = msg.FirstName;

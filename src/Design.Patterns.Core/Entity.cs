@@ -2,7 +2,7 @@
 
 namespace Design.Patterns.Core
 {
-	public abstract class State
+	public class Entity
 	{
 		public long Id { get; set; }
 

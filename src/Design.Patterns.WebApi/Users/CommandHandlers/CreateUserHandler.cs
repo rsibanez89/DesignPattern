@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Design.Patterns.Core;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,10 +7,10 @@ namespace Design.Patterns.WebApi.Users
 {
 	public partial class UserCommandHandlers
 	{
-		public async Task<UserState> HandleAsync(CreateUser msg, CancellationToken? cancellationToken)
+		public async Task<UserEntity> HandleAsync(CreateUser msg, MessageContext messageContext)
 		{
 			var encryptedPassword = passwordService.EncryptPassword(msg.Password);
-			var state = new UserState
+			var state = new UserEntity
 			{
 				FirstName = msg.FirstName,
 				LastName = msg.LastName,

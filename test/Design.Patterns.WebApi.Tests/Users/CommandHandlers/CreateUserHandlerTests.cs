@@ -30,11 +30,11 @@ namespace Design.Patterns.WebApi.Tests.Users
 				.Returns(new EncryptedPassword { Password = encodedPassword, Salt = encodedSalt });
 
 			repository
-				.CreateAsync(Arg.Any<UserState>())
-				.Returns(param => Task.FromResult((UserState)param[0]));
+				.CreateAsync(Arg.Any<UserEntity>())
+				.Returns(param => Task.FromResult((UserEntity)param[0]));
 
 			// When
-			var user = await userCommandHandlers.HandleAsync(createUser);
+			var user = await userCommandHandlers.HandleAsync(createUser, null);
 
 			// Then
 			passwordService.Received(1).EncryptPassword("12345678");
