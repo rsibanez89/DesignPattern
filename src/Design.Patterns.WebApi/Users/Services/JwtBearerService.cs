@@ -1,18 +1,17 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {
 	public interface IJwtBearerService
 	{
 		string GetToken(UserEntity user);
+		UserEntity GetUserFromToken(string token);
 	}
 
 	public class JwtBearerService : IJwtBearerService
@@ -46,6 +45,17 @@ namespace Design.Patterns.WebApi.Users
 			};
 			var token = TokenHandler.CreateToken(tokenDescriptor);
 			return TokenHandler.WriteToken(token);
+		}
+
+		public UserEntity GetUserFromToken(string token)
+		{
+			var securityToken = (JwtSecurityToken)TokenHandler.ReadToken(token);
+
+			return new UserEntity
+			{
+				Id = securityToken.Claims.Where(c => c.Type == "nameid").Select(c => long.Parse(c.Value)).Single(),
+				Roles = securityToken.Claims.Where(c => c.Type == "role").Select(c => Enum.Parse<UserRole>(c.Value))
+			};
 		}
 	}
 }

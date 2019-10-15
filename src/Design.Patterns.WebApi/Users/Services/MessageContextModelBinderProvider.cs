@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Design.Patterns.WebApi.CommonHelpers
+namespace Design.Patterns.WebApi.Users
 {
     public class MessageContextModelBinderProvider : IModelBinderProvider
     {
@@ -23,8 +23,7 @@ namespace Design.Patterns.WebApi.CommonHelpers
                 var headerAttribute = x.Attributes.Attributes.Where(a => a.GetType() == typeof(FromHeaderAttribute)).FirstOrDefault();
                 if (headerAttribute != null)
                 {
-                    Console.WriteLine(headerAttribute);
-                    return null;//new BinderTypeModelBinder(typeof(HeaderComplexModelBinder));
+                    return new BinderTypeModelBinder(typeof(MessageContextModelBinder));
                 }
                 else
                 {

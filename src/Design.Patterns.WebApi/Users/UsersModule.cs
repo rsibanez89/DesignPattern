@@ -1,19 +1,13 @@
 ﻿using Dapper;
-using Design.Patterns.Core;
-using Design.Patterns.WebApi.CommonHelpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Data;
 using System.Data.SQLite;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Design.Patterns.WebApi.Users
 {

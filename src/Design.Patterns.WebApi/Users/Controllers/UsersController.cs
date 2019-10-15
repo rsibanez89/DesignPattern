@@ -87,8 +87,10 @@ namespace Design.Patterns.WebApi.Users
 		// DELETE api/users/5
 		[HttpDelete("{id}")]
 		[Authorize(Roles = nameof(UserRole.Admin))]
-		public async Task<UserView> Delete(long id, [FromBody] DeleteUser deleteUser, [ModelBinder] MessageContext messageContext)
+		public async Task<UserView> Delete(long id, [FromBody] DeleteUser deleteUser, [FromHeader] MessageContext messageContext)
 		{
+			var user = User;
+
 			return (await userCommandHandlers.HandleAsync(deleteUser, messageContext))
 				.ToUserView();
 		}
